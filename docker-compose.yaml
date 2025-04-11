@@ -1,4 +1,3 @@
-
 services:
   r1:
     build: .
@@ -55,7 +54,7 @@ services:
       net11:
         ipv4_address: 10.0.11.3
 
-   hb:
+  hb:
     build: .
     stdin_open: true
     tty: true
