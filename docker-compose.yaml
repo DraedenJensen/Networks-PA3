@@ -82,10 +82,10 @@ networks:
       config:
         - subnet: 10.0.13.0/24
   net14:
-  ipam:
-    driver: default
-    config:
-      - subnet: 10.0.14.0/24
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.14.0/24
 
 
 
