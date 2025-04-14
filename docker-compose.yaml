@@ -7,8 +7,10 @@ services:
       - ALL
     privileged: true
     networks:
-      net11:
-        ipv4_address: 10.0.11.4
+      net12:
+        ipv4_address: 10.0.12.5
+      net14:
+        ipv4_address: 10.0.14.5
 
   r2:
     build: .
@@ -19,7 +21,9 @@ services:
     privileged: true
     networks:
       net12:
-        ipv4_address: 10.0.12.4
+        ipv4_address: 10.0.12.2
+      net23:
+        ipv4_address: 10.0.23.2
 
   r3:
     build: .
@@ -29,8 +33,10 @@ services:
     - ALL
     privileged: true
     networks:
-      net13:
-        ipv4_address: 10.0.13.4
+      net23:
+        ipv4_address: 10.0.23.3
+      net34:
+        ipv4_address: 10.0.34.3
 
   r4:
     build: .
@@ -42,6 +48,8 @@ services:
     networks:
       net14:
         ipv4_address: 10.0.14.4
+      net34:
+        ipv4_address: 10.0.34.4
 
   ha:
     build: .
@@ -52,7 +60,7 @@ services:
     privileged: true
     networks:
       net11:
-        ipv4_address: 10.0.11.3
+        ipv4_address: 10.0.12.9
 
   hb:
     build: .
@@ -63,29 +71,29 @@ services:
     privileged: true
     networks:
       net13:
-        ipv4_address: 10.0.13.3
+        ipv4_address: 10.0.34.9
 
 networks:
-  net11:
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.0.11.0/24
   net12:
     ipam:
       driver: default
       config:
         - subnet: 10.0.12.0/24
-  net13:
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.0.13.0/24
   net14:
     ipam:
       driver: default
       config:
         - subnet: 10.0.14.0/24
+  net23:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.23.0/24
+  net34:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.34.0/24
 
 
 
