@@ -59,7 +59,7 @@ services:
       - ALL
     privileged: true
     networks:
-      net11:
+      net12:
         ipv4_address: 10.0.12.9
 
   hb:
@@ -70,7 +70,7 @@ services:
       - ALL
     privileged: true
     networks:
-      net13:
+      net34:
         ipv4_address: 10.0.34.9
 
 networks:
