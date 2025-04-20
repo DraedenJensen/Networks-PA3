@@ -155,7 +155,7 @@ if args.routes:
                             "-c 'interface eth0' "
                             "-c 'ip ospf cost 10' " 
                             "-c 'end' "
-                            "-c 'interface eth1' "
+                            "-c 'interface eth2' "
                             "-c 'ip ospf cost 10'"), shell=True)
             print(f"Finished adding weights for {container.name}")
         print("Finished OSPF route setup, exiting")
