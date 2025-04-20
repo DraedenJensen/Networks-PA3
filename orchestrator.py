@@ -21,7 +21,7 @@ def add_container(name, subnet_addresses):
         image="image",
         name="r1",
         stdin_open=True,
-        tty=True
+        tty=True,
         cap_add=["ALL"],
         privileged=True,
         detach=True,
