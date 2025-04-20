@@ -88,7 +88,6 @@ if args.daemons:
         for container in client.containers.list():
             if (container.name == "ha" or container.name == "hb"):
                 continue
-
             print(f"Beginning setup for {container.name}...")
             print("...")
             print("...")
@@ -105,25 +104,61 @@ if args.daemons:
             print("...")
             print(f"OSPF daemon setup complete for {container.name}")
             print("...")
-
-            #subprocess.run(["docker", "exec", "-it", container.name, "apt -y install curl"])
-            # subprocess.run(["docker", "exec", "-it", container.name, "apt -y install gnupg"])
-            # subprocess.run(["docker", "exec", "-it", container.name, "curl -s https://deb.frrouting.org/frr/keys.gpg | tee /usr/share/keyrings/frrouting.gpg > /dev/null"])
-            # subprocess.run(["docker", "exec", "-it", container.name, "apt install lsb-release"])
-            # subprocess.run(["docker", "exec", "-it", container.name, "FRRVER=\"frr-stable\""])
-            # subprocess.run(["docker", "exec", "-it", container.name, "echo deb '[signed-by=/usr/share/keyrings/frrouting.gpg]’ https://deb.frrouting.org/frr $(lsb_release -s -c) $FRRVER | tee -a /etc/apt/sources.list.d/frr.list"])
-            # subprocess.run(["docker", "exec", "-it", container.name, "apt update && apt -y install frr frr-pythontools"])
-            
-            # subprocess.run(["docker", "exec", container.name, "sh", "-c", "apt -y install curl"])
-            # subprocess.run(["docker", "exec", container.name, "sh", "-c", "apt -y install gnupg"])
-            # subprocess.run(["docker", "exec", container.name, "sh", "-c", "curl -s https://deb.frrouting.org/frr/keys.gpg | tee /usr/share/keyrings/frrouting.gpg > /dev/null"])
-            # subprocess.run(["docker", "exec", container.name, "sh", "-c", "apt install lsb-release"])
-            # subprocess.run(["docker", "exec", container.name, "sh", "-c", "FRRVER=\"frr-stable\""])
-            # subprocess.run(["docker", "exec", container.name, "sh", "-c", "echo deb '[signed-by=/usr/share/keyrings/frrouting.gpg]’ https://deb.frrouting.org/frr $(lsb_release -s -c) $FRRVER | tee -a /etc/apt/sources.list.d/frr.list"])
-            # subprocess.run(["docker", "exec", container.name, "sh", "-c", "apt update && apt -y install frr frr-pythontools"])
-    print("Finished OSPF daemon setup, exit")
+        print("Finished OSPF daemon setup, exit")
 if args.routes:
-    pass 
+    print("Beginning OSPF route setup...")
+    if len(client.containers.list()) == 0:
+        print("Error: no containers connected, exiting")
+    else:
+        for container in client.containers.list():
+            print(f"Beginning setup for {container.name}...")
+            router = True
+            match container.name:
+                case "ha":
+                    net = "10.0.34.0/24 gw 10.0.12.5"
+                    router = False
+                case "hb":
+                    net = "10.0.12.0/24 gw 10.0.34.3"
+                    router = False
+                case "r1":
+                    net1 = "10.0.12.0.0/24"
+                    net2 = "10.0.14.0.0/24"
+                case "r2":
+                    net1 = "10.0.12.0.0/24"
+                    net2 = "10.0.23.0.0/24"
+                case "r3":
+                    net1 = "10.0.23.0.0/24"
+                    net2 = "10.0.34.0.0/24"
+                case "r4":
+                    net1 = "10.0.14.0.0/24"
+                    net2 = "10.0.34.0.0/24"
+
+            if router:
+                subprocess.run((f"docker exec -it {container.name} "
+                                "vtysh " 
+                                "-c 'configure terminal' " 
+                                "-c 'router ospf' "
+                                f"-c 'network {net1} area 0.0.0.0' " 
+                                f"-c 'network {net2} area 0.0.0.0'"), shell=True)
+                print(f"Router {container.name} now advertising subnets {net1} and {net2}")
+            else:
+                subprocess.run(f"docker exec -it {container.name} route add -net {net}", shell=True)
+                print(f"Subnet {net[:11]} now visible to host {container.name}")
+        print("Finished initial route setup, adding OSPF weights...")
+        for container in client.containers.list():
+            if container.name == "ha" or container.name == "hb":
+                continue
+            print(f"Adding weights for {container.name}...")
+            subprocess.run((f"docker exec -it {container.name} "
+                            "vtysh " 
+                            "-c 'configure terminal' " 
+                            "-c 'interface eth0' "
+                            "-c 'ip ospf cost 10' " 
+                            "-c 'end' "
+                            "-c 'interface eth1' "
+                            "-c 'ip ospf cost 10'"), shell=True)
+            print(f"Finished adding weights for {container.name}")
+        print("Finished OSPF route setup, exiting")
 if args.north:
     pass
 if args.south:
