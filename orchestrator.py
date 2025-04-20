@@ -163,6 +163,9 @@ if args.routes:
                             "-c 'interface eth1' "
                             "-c 'ip ospf cost 10' " 
                             "-c 'exit' "
+                            "-c 'interface eth2' "
+                            "-c 'ip ospf cost 10' " 
+                            "-c 'exit' "
                             "-c 'end'"), shell=True)
             print(f"Finished adding weights for {container.name}")
         for container in client.containers.list():
