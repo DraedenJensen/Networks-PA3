@@ -1,7 +1,8 @@
 import docker
 import argparse
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(prog = 'OSPF orchestrator', 
+                                 description='Application for creating and managing a four-node topology with two hosts featuring traffic control between a north and south route')
 g = parser.add_mutually_exclusive_group()
 g.add_argument("-c", "--construct", action="store_true", help="construct or rebuild the four-node network topology")
 g.add_argument("-d", "--daemons", action="store_true", help="start up OSPF daemons with appropriate configurations in the routed network topology")
