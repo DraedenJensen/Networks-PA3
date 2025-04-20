@@ -4,7 +4,10 @@ client = docker.from_env()
 
 def add_network(name, subnet):
     try:
-        client.networks.get(name).remove()
+        network = client.networks.get(name)
+        for ctnr in network.containers:
+            network.disconnect(ctnr)
+        network.remove()
         print(f"Network {name} already exists, removing and rebuilding...")
     except docker.errors.NotFound:
         print(f"Building network {name}...")
