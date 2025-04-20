@@ -142,7 +142,7 @@ if args.routes:
                                 "-c 'configure terminal' " 
                                 "-c 'router ospf' "
                                 f"-c 'network {net1} area 0.0.0.0' " 
-                                f"-c 'network {net2} area 0.0.0.0'"
+                                f"-c 'network {net2} area 0.0.0.0' "
                                 "-c 'exit' "
                                 "-c 'end'"), shell=True)
                 print(f"Router {container.name} now advertising subnets {net1} and {net2}")
