@@ -168,7 +168,10 @@ if args.routes:
                             "-c 'exit' "
                             "-c 'end'"), shell=True)
             print(f"Finished adding weights for {container.name}")
-        
+        for container in client.containers.list():
+            if container.name == "ha" or container.name == "hb":
+                continue
+            container.attach()
         print("Finished OSPF route setup, exiting")
 if args.north:
     print("Directing traffic to north route (R2)...")
