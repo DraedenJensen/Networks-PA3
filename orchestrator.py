@@ -3,7 +3,7 @@ import docker
 client = docker.from_env()
 
 def add_network(name, subnet):
-    client.networks.create(name, driver="default",
+    client.networks.create(name, driver="bridge",
     ipam=docker.types.IPAMConfig(pool_configs=[
         docker.types.IPAMPool(subnet=subnet)
     ]))
