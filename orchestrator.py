@@ -87,7 +87,7 @@ if args.daemons:
     else:
         for container in client.containers.list():
             print(f"Beginning setup for {container.name}...")
-            subprocess.run(["docker", "exec", "-it", container.name, "bash", "apt -y install curl"])
+            subprocess.run(["docker", "exec", "-it", container.name, "-c", "apt -y install curl"])
             subprocess.run(["docker", "exec", "-it", container.name, "apt -y install gnupg"])
             subprocess.run(["docker", "exec", "-it", container.name, "curl -s https://deb.frrouting.org/frr/keys.gpg | tee /usr/share/keyrings/frrouting.gpg > /dev/null"])
             subprocess.run(["docker", "exec", "-it", container.name, "apt install lsb-release"])
