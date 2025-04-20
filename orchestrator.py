@@ -24,7 +24,7 @@ if args.construct:
             network = client.networks.get(name)
             print(f"Network {name} already exists, removing...")
             for ctnr in network.containers:
-                print(f"Disconnecting {ctnr.name} from {name}")
+                print(f"Disconnecting {ctnr.name} from {name}...")
                 network.disconnect(ctnr)
             network.remove()
             print(f"Finished removing {name}, rebuilding...")
@@ -78,7 +78,7 @@ if args.construct:
     add_container("ha", [("net12", "10.0.12.9")])
     add_container("hb", [("net34", "10.0.34.9")])
 
-    print("All networks and nodes creatd, exiting")
+    print("All networks and nodes created, exiting")
 if args.daemons:
     pass 
 if args.routes:
@@ -90,7 +90,7 @@ if args.south:
 if args.quit:
     print("Beginning destruction of the topology...")
     removed = False
-    for network in client.networks:
+    for network in client.networks.list:
         removed = True
         name = network.name
         print(f"Removing network {name}...")
@@ -99,7 +99,7 @@ if args.quit:
             network.disconnect(ctnr)
         network.remove()
         print(f"Network {name} removed")
-    for container in client.containers:
+    for container in client.containers.list:
         removed = True
         name = container.name
         print(f"Removing container {name}...")
