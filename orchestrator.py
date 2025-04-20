@@ -27,7 +27,9 @@ image, _ = client.images.build(path=".", tag="image")
 
 def add_container(name, subnet_addresses):
     try:
-        client.containers.get(name).remove()
+        container = client.containers.get(name)
+        container.stop()
+        container.remove()
         print(f"Container {name} already exists, removing and rebuilding...")
     except docker.errors.NotFound:
         print(f"Building container {name}...")
