@@ -86,6 +86,9 @@ if args.daemons:
         print("Error: no containers connected, exiting")
     else:
         for container in client.containers.list():
+            if (container.name == "ha" or container.name == "hb"):
+                continue
+
             print(f"Beginning setup for {container.name}...")
             print("...")
             print("...")
