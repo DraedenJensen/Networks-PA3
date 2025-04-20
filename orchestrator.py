@@ -23,7 +23,7 @@ image, _ = client.images.build(path=".", tag="image")
 def add_container(name, subnet_addresses):
     container = client.containers.create(
         image="image",
-        name="r1",
+        name=name,
         stdin_open=True,
         tty=True,
         cap_add=["ALL"],
