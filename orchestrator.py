@@ -159,13 +159,38 @@ if args.routes:
                             "-c 'ip ospf cost 10' " 
                             "-c 'exit' "
                             "-c 'interface eth1' "
+                            "-c 'ip ospf cost 10' " 
+                            "-c 'exit' "
+                            "-c 'interface eth2' "
                             "-c 'ip ospf cost 10'"), shell=True)
             print(f"Finished adding weights for {container.name}")
         print("Finished OSPF route setup, exiting")
 if args.north:
-    pass
+    print("Directing traffic to north route (R2)...")
+    if len(client.containers.list()) == 0:
+        print("Error: no containers connected, exiting")
+    subprocess.run((f"docker exec -it r4 "
+                    "vtysh " 
+                    "-c 'configure terminal' " 
+                    "-c 'interface eth0' "
+                    "-c 'ip ospf cost 100' " 
+                    "-c 'exit' "
+                    "-c 'interface eth1' "
+                    "-c 'ip ospf cost 100'"), shell=True)
+    print("OSPF costs updated, exiting")
 if args.south:
-    pass
+    print("Directing traffic to south route (R4)...")
+    if len(client.containers.list()) == 0:
+        print("Error: no containers connected, exiting")
+    subprocess.run((f"docker exec -it r2 "
+                    "vtysh " 
+                    "-c 'configure terminal' " 
+                    "-c 'interface eth0' "
+                    "-c 'ip ospf cost 100' " 
+                    "-c 'exit' "
+                    "-c 'interface eth2' "
+                    "-c 'ip ospf cost 100'"), shell=True)
+    print("OSPF costs updated, exiting")
 if args.quit:
     print("Beginning destruction of the topology...")
     removed = False
