@@ -104,7 +104,7 @@ if args.daemons:
             print("...")
             print("...")
             print(f"OSPF daemon setup complete for {container.name}")
-            print("...")`
+            print("...")
 
             #subprocess.run(["docker", "exec", "-it", container.name, "apt -y install curl"])
             # subprocess.run(["docker", "exec", "-it", container.name, "apt -y install gnupg"])
