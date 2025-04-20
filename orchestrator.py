@@ -144,7 +144,7 @@ if args.routes:
                                 f"-c 'network {net1} area 0.0.0.0' " 
                                 f"-c 'network {net2} area 0.0.0.0'"
                                 "-c 'exit' "
-                                "-c 'end"), shell=True)
+                                "-c 'end'"), shell=True)
                 print(f"Router {container.name} now advertising subnets {net1} and {net2}")
             else:
                 subprocess.run(f"docker exec -it {container.name} route add -net {net}", shell=True)
@@ -163,7 +163,7 @@ if args.routes:
                             "-c 'interface eth1' "
                             "-c 'ip ospf cost 10' " 
                             "-c 'exit' "
-                            "-c 'end' "), shell=True)
+                            "-c 'end'"), shell=True)
             print(f"Finished adding weights for {container.name}")
         for container in client.containers.list():
             if not (container.name == "ha" or container.name == "hb"):
