@@ -90,9 +90,9 @@ if args.south:
 if args.quit:
     print("Beginning destruction of the topology...")
     removed = False
-    for name in client.networks.list().names:
+    for net in client.networks.list():
         removed = True
-        network= client.networks.get(name)
+        network= client.networks.get(net.name)
         print(f"Removing network {name}...")
         for ctnr in network.containers:
             print(f"Disconnecting {cntr.name} from {name}...")
