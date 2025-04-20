@@ -85,15 +85,16 @@ if args.daemons:
     if len(client.containers.list()) == 0:
         print("Error: no containers connected, exiting")
     else:
-        for container in client.containers.list():
-            print(f"Beginning setup for {container.name}...")
-            subprocess.run(f"docker exec -it {container.name} apt -y install curl", shell=True)
-            subprocess.run(f"docker exec -it {container.name} apt -y install gnupg", shell=True)
-            subprocess.run(f"docker exec -it {container.name} curl -s https://deb.frrouting.org/frr/keys.gpg | tee /usr/share/keyrings/frrouting.gpg > /dev/null", shell=True)
-            subprocess.run(f"docker exec -it {container.name} apt -y install lsb-release", shell=True)
-            #subprocess.run(f"docker exec -it {container.name} FRRVER=\"frr-stable\"", shell=True)
-            subprocess.run(f"docker exec -it {container.name} echo deb '[signed-by=/usr/share/keyrings/frrouting.gpg]' https://deb.frrouting.org/frr $(lsb_release -s -c) frr-stable | tee -a /etc/apt/sources.list.d/frr.list", shell=True)
-            subprocess.run(f"docker exec -it {container.name} apt update && apt -y install frr frr-pythontools", shell=True)
+        #for container in client.containers.list():
+        container = client.containers.get("r1")
+        print(f"Beginning setup for {container.name}...")
+        subprocess.run(f"docker exec -it {container.name} apt -y install curl", shell=True)
+        subprocess.run(f"docker exec -it {container.name} apt -y install gnupg", shell=True)
+        subprocess.run(f"docker exec -it {container.name} curl -s https://deb.frrouting.org/frr/keys.gpg | tee /usr/share/keyrings/frrouting.gpg > /dev/null", shell=True)
+        subprocess.run(f"docker exec -it {container.name} apt -y install lsb-release", shell=True)
+        #subprocess.run(f"docker exec -it {container.name} FRRVER=\"frr-stable\"", shell=True)
+        subprocess.run(f"docker exec -it {container.name} echo deb '[signed-by=/usr/share/keyrings/frrouting.gpg]' https://deb.frrouting.org/frr $(lsb_release -s -c) frr-stable | tee -a /etc/apt/sources.list.d/frr.list", shell=True)
+        subprocess.run(f"docker exec -it {container.name} apt update && apt -y install frr frr-pythontools", shell=True)
 
             #subprocess.run(["docker", "exec", "-it", container.name, "apt -y install curl"])
             # subprocess.run(["docker", "exec", "-it", container.name, "apt -y install gnupg"])
