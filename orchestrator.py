@@ -86,7 +86,7 @@ if args.daemons:
         print("Error: no containers connected, exiting")
     else:
         for container in client.containers.list():
-            exec = f"exec -it {container.name}
+            exec = f"exec -it {container.name}"
             subprocess.run(f"{exec} hostname")
         #     subprocess.run(f"{exec} apt -y install curl")
         #     subprocess.run(f"{exec} apt -y install gnupg")
