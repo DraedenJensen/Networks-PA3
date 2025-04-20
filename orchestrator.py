@@ -99,7 +99,8 @@ if args.quit:
         print(f"Container {name} removed")
     for network in client.networks.list():
         removed = True
-        print(f"Removing network {net.name}...")
+        name = network.name
+        print(f"Removing network {name}...")
         network.remove()
         print(f"Network {name} removed")
     
