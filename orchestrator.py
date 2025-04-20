@@ -3,11 +3,15 @@ import docker
 client = docker.from_env()
 
 def add_network(name, subnet):
-    client.networks.create(name, driver="bridge",
-    ipam=docker.types.IPAMConfig(pool_configs=[
-        docker.types.IPAMPool(subnet=subnet)
-    ]))
-    print(f"Network {name} created with subnet {subnet}")
+    try:
+        client.networks.get(name)
+        print(f"Network {name} already exists with subnet {subnet}")
+    except docker.errors.NotFound:
+        client.networks.create(name, driver="bridge",
+        ipam=docker.types.IPAMConfig(pool_configs=[
+            docker.types.IPAMPool(subnet=subnet)
+        ]))
+        print(f"Network {name} created with subnet {subnet}")
 
 add_network("net12", "10.0.12.0/24")
 add_network("net14", "10.0.14.0/24")
