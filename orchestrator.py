@@ -154,7 +154,7 @@ if args.routes:
                             "-c 'configure terminal' " 
                             "-c 'interface eth0' "
                             "-c 'ip ospf cost 10' " 
-                            "-c 'end' "
+                            "-c 'exit' "
                             "-c 'interface eth1' "
                             "-c 'ip ospf cost 10'"), shell=True)
             print(f"Finished adding weights for {container.name}")
