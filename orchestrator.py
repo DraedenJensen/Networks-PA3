@@ -178,10 +178,10 @@ if args.north:
                     "vtysh " 
                     "-c 'configure terminal' " 
                     "-c 'interface eth0' "
-                    "-c 'ip ospf cost 100' " 
+                    "-c 'ip ospf cost 10' " 
                     "-c 'exit' "
                     "-c 'interface eth1' "
-                    "-c 'ip ospf cost 10' 
+                    "-c 'ip ospf cost 10' "
                     "-c 'exit' "
                     "-c 'end'"), shell=True)
     subprocess.run((f"docker exec -it r4 "
@@ -191,7 +191,7 @@ if args.north:
                     "-c 'ip ospf cost 100' " 
                     "-c 'exit' "
                     "-c 'interface eth1' "
-                    "-c 'ip ospf cost 100'"
+                    "-c 'ip ospf cost 100' "
                     "-c 'exit' "
                     "-c 'end'"), shell=True)
     print("OSPF costs updated, exiting")
@@ -216,7 +216,7 @@ if args.south:
                     "-c 'ip ospf cost 100' " 
                     "-c 'exit' "
                     "-c 'interface eth2' "
-                    "-c 'ip ospf cost 100'" 
+                    "-c 'ip ospf cost 100' " 
                     "-c 'exit' "
                     "-c 'end'"), shell=True)
     print("OSPF costs updated, exiting")
