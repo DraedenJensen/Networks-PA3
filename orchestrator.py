@@ -1,4 +1,14 @@
 import docker
+import argparse
+
+parser = argparse.ArgumentParser()
+#parser.add_argument("-h", "--help", action="store_true", help="Show command line options")
+parser.add_argument("-c", "--construct", action="store_true", help="Construct or rebuild the four-node network topology")
+parser.add_argument("-d", "--daemons", action="store_true", help="Start up OSPF daemons with appropriate configurations in the routed network topology")
+parser.add_argument("-r", "--routes", action="store_true", help="Install routes connecting the hosts and endpoints in the routed network topology")
+parser.add_argument("-n", "--north", action="store_true", help="Direct network traffic to the north path (via router R2)")
+parser.add_argument("-s", "--south", action="store_true", help="Direct network traffic to the south path (via router R4)")
+parser.add_argument("-q", "--quit", action="store_true", help="Disconnect the network topology")
 
 client = docker.from_env()
 
@@ -15,7 +25,7 @@ def add_network(name, subnet):
     client.networks.create(name, driver="bridge",
     ipam=docker.types.IPAMConfig(pool_configs=[
         docker.types.IPAMPool(subnet=subnet)
-    ]))
+    ])
     print(f"Network {name} created with subnet {subnet}")
 
 add_network("net12", "10.0.12.0/24")
