@@ -168,6 +168,10 @@ if args.routes:
                             "-c 'exit' "
                             "-c 'end'"), shell=True)
             print(f"Finished adding weights for {container.name}")
+        for container in client.containers.list():
+            if not (container.name == "ha" or container.name == "hb"):
+                print(f"{container.name} routing table")
+                subprocess.run(f"docker exec -it {container.name} vtysh -c 'show ip ospf route'", shell=True)
         print("Finished OSPF route setup, exiting")
 if args.north:
     print("Directing traffic to north route (R2)...")
