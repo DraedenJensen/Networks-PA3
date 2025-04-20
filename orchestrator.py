@@ -133,7 +133,7 @@ if args.routes:
                     net2 = "10.0.34.0/24"
 
             if router:
-                subprocess.run(f"docker exec -it {container.name} vtysh -c 'clear ospf'")
+                subprocess.run(f"docker exec -it {container.name} vtysh -c 'clear ospf'", shell=True)
                 subprocess.run((f"docker exec -it {container.name} "
                                 "vtysh " 
                                 "-c 'configure terminal' " 
