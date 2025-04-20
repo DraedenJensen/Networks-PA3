@@ -86,16 +86,16 @@ if args.daemons:
         print("Error: no containers connected, exiting")
     else:
         for container in client.containers.list():
+            print(f"Beginning setup for {container.name}...")
             subprocess.run(["docker", "exec", container.name, "sh", "-c", "apt -y install curl"])
-        #     subprocess.run(f"{exec} apt -y install gnupg")
-        #     subprocess.run(f"{exec} curl -s https://deb.frrouting.org/frr/keys.gpg | \\")
-        #     subprocess.run(f"tee /usr/share/keyrings/frrouting.gpg > /dev/null")
-        #     subprocess.run(f"{exec} apt install lsb-release")
-        #     subprocess.run(f"{exec} FRRVER=\"frr-stable\"")
-        #     subprocess.run(f"{exec} echo deb ’[signed-by=/usr/share/keyrings/frrouting.gpg]’ https://deb.frrouting.org/frr \\")
-        #     subprocess.run(f"$(lsb_release -s -c) $FRRVER | tee -a /etc/apt/sources.list.d/frr.list")
-        #     subprocess.run(f"apt update && apt -y install frr frr-pythontools")
-
+            subprocess.run(["docker", "exec", container.name, "sh", "-c", "apt -y install gnupg"])
+            subprocess.run(["docker", "exec", container.name, "sh", "-c", "curl -s https://deb.frrouting.org/frr/keys.gpg | tee /usr/share/keyrings/frrouting.gpg > /dev/null"])
+            subprocess.run(["docker", "exec", container.name, "sh", "-c", "apt install lsb-release"])
+            subprocess.run(["docker", "exec", container.name, "sh", "-c", "FRRVER=\"frr-stable\""])
+            subprocess.run(["docker", "exec", container.name, "sh", "-c", "echo deb ’[signed-by=/usr/share/keyrings/frrouting.gpg]’ https://deb.frrouting.org/frr $(lsb_release -s -c) $FRRVER | tee -a /etc/apt/sources.list.d/frr.list"])
+            subprocess.run(["docker", "exec", container.name, "sh", "-c", "apt update && apt -y install frr frr-pythontools"])
+            print(f"OSPF daemon setup complete for {container.name}")
+    print("Finished OSPF daemon setup, exit")
 if args.routes:
     pass 
 if args.north:
