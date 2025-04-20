@@ -109,6 +109,10 @@ if args.routes:
     if len(client.containers.list()) == 0:
         print("Error: no containers connected, exiting")
     else:
+        print("Restarting FRR on all routers...")
+        for container in client.containers.list():
+            if not (container.name == "ha" or container.name == "hb"):
+                subprocess.run(f"docker exec -it {container.name} service frr restart", shell=True)
         for container in client.containers.list():
             print(f"Beginning setup for {container.name}...")
             router = True
@@ -133,7 +137,6 @@ if args.routes:
                     net2 = "10.0.34.0/24"
 
             if router:
-                subprocess.run(f"docker exec -it {container.name} service frr restart", shell=True)
                 subprocess.run((f"docker exec -it {container.name} "
                                 "vtysh " 
                                 "-c 'configure terminal' " 
