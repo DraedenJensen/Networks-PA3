@@ -25,7 +25,7 @@ def add_network(name, subnet):
     client.networks.create(name, driver="bridge",
     ipam=docker.types.IPAMConfig(pool_configs=[
         docker.types.IPAMPool(subnet=subnet)
-    ])
+    ]))
     print(f"Network {name} created with subnet {subnet}")
 
 add_network("net12", "10.0.12.0/24")
