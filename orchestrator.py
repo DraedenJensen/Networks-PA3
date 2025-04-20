@@ -9,6 +9,7 @@ g.add_argument("-d", "--daemons", action="store_true", help="start up OSPF daemo
 g.add_argument("-r", "--routes", action="store_true", help="install routes connecting the hosts and endpoints in the routed network topology")
 g.add_argument("-n", "--north", action="store_true", help="direct network traffic to the north path (via router R2)")
 g.add_argument("-s", "--south", action="store_true", help="direct network traffic to the south path (via router R4)")
+g.add_argument("-q", "--quit", action="store_true", help="disconnect the network topology")
 args = parser.parse_args()
 
 client = docker.from_env()
@@ -86,3 +87,23 @@ if args.north:
     pass
 if args.south:
     pass
+if args.quit:
+    print("Beginning destruction of the topology...")
+    removed = False
+    for container in client.containers.list():
+        removed = True
+        name = container.name
+        print(f"Removing container {name}...")
+        container.stop()
+        container.remove()
+        print(f"Container {name} removed")
+    for network in client.networks.list():
+        removed = True
+        print(f"Removing network {net.name}...")
+        network.remove()
+        print(f"Network {name} removed")
+    
+    if not removed:
+        print("Nothing to remove, exiting")
+    else:
+        print("Topology disconnected, exiting")
