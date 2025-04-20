@@ -86,7 +86,7 @@ if args.daemons:
         print("Error: no containers connected, exiting")
     else:
         for container in client.containers.list():
-            subprocess.run(["docker", "exec", "-it", "//bin/bash", container.name, "apt -y install curl"])
+            subprocess.run(["docker", "exec", "-it", container.name, "apt -y install curl"], shell=True)
         #     subprocess.run(f"{exec} apt -y install gnupg")
         #     subprocess.run(f"{exec} curl -s https://deb.frrouting.org/frr/keys.gpg | \\")
         #     subprocess.run(f"tee /usr/share/keyrings/frrouting.gpg > /dev/null")
