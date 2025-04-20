@@ -88,26 +88,28 @@ if args.north:
 if args.south:
     pass
 if args.quit:
-    print("Beginning destruction of the topology...")
-    removed = False
-    for net in client.networks.list():
-        removed = True
-        if net.name in ["r1", "r2", "r3", "r4", "ha", "hb"]:
-            network= client.networks.get(net.name)
-            print(f"Removing network {net.name}...")
-            for ctnr in network.containers:
-                print(f"Disconnecting {ctnr.name} from {name}...")
-                network.disconnect(ctnr)
-            network.remove()
-            print(f"Network {name} removed")
-    for container in client.containers.list():
-        removed = True
-        name = container.name
-        print(f"Removing container {name}...")
-        container.stop()
-        container.remove()
-        print(f"Container {name} removed")
-    if not removed:
-        print("Nothing to remove, exiting")
-    else:
-        print("Topology disconnected, exiting")
+    print("Closing client...")
+    client.close()
+    print("Topology disconnected, exiting")
+    # removed = False
+    # for net in client.networks.list():
+    #     removed = True
+    #     if net.name in ["r1", "r2", "r3", "r4", "ha", "hb"]:
+    #         network= client.networks.get(net.name)
+    #         print(f"Removing network {net.name}...")
+    #         for ctnr in network.containers:
+    #             print(f"Disconnecting {ctnr.name} from {name}...")
+    #             network.disconnect(ctnr)
+    #         network.remove()
+    #         print(f"Network {name} removed")
+    # for container in client.containers.list():
+    #     removed = True
+    #     name = container.name
+    #     print(f"Removing container {name}...")
+    #     container.stop()
+    #     container.remove()
+    #     print(f"Container {name} removed")
+    # if not removed:
+    #     print("Nothing to remove, exiting")
+    # else:
+    #     print("Topology disconnected, exiting")
