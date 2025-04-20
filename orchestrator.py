@@ -100,9 +100,10 @@ if args.quit:
     for network in client.networks.list():
         removed = True
         name = network.name
-        print(f"Removing network {name}...")
-        network.remove()
-        print(f"Network {name} removed")
+        if name in ["net12", "net23", "net34", "net14"]:
+            print(f"Removing network {name}...")
+            network.remove()
+            print(f"Network {name} removed")
     
     if not removed:
         print("Nothing to remove, exiting")
