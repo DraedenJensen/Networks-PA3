@@ -81,14 +81,12 @@ if args.construct:
 
     print("All networks and nodes created, exiting")
 if args.daemons:
-    print("Beginning OSPF daemon setup")
+    print("Beginning OSPF daemon setup...")
     if len(client.containers.list()) == 0:
         print("Error: no containers connected, exiting")
     else:
         for container in client.containers.list():
-            exec = f"exec -it {container.name}"
-            subprocess.run(f"{exec} hostname")
-        #     subprocess.run(f"{exec} apt -y install curl")
+            subprocess.run(["exec", "-it", container.name, "apt", "-y", "install", "curl"])
         #     subprocess.run(f"{exec} apt -y install gnupg")
         #     subprocess.run(f"{exec} curl -s https://deb.frrouting.org/frr/keys.gpg | \\")
         #     subprocess.run(f"tee /usr/share/keyrings/frrouting.gpg > /dev/null")
