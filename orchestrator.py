@@ -169,6 +169,14 @@ if args.north:
     print("Directing traffic to north route (R2)...")
     if len(client.containers.list()) == 0:
         print("Error: no containers connected, exiting")
+    subprocess.run((f"docker exec -it r2 "
+                "vtysh " 
+                "-c 'configure terminal' " 
+                "-c 'interface eth0' "
+                "-c 'ip ospf cost 100' " 
+                "-c 'exit' "
+                "-c 'interface eth1' "
+                "-c 'ip ospf cost 10'"), shell=True)
     subprocess.run((f"docker exec -it r4 "
                     "vtysh " 
                     "-c 'configure terminal' " 
@@ -182,6 +190,14 @@ if args.south:
     print("Directing traffic to south route (R4)...")
     if len(client.containers.list()) == 0:
         print("Error: no containers connected, exiting")
+    subprocess.run((f"docker exec -it r4 "
+                    "vtysh " 
+                    "-c 'configure terminal' " 
+                    "-c 'interface eth0' "
+                    "-c 'ip ospf cost 10' " 
+                    "-c 'exit' "
+                    "-c 'interface eth1' "
+                    "-c 'ip ospf cost 10'"), shell=True)
     subprocess.run((f"docker exec -it r2 "
                     "vtysh " 
                     "-c 'configure terminal' " 
