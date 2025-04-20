@@ -2,7 +2,7 @@ import docker
 import argparse
 
 parser = argparse.ArgumentParser(prog = 'OSPF orchestrator', 
-                                 description='Application for creating and managing a four-node topology with two hosts featuring traffic control between a north and south route')
+                                 description='An application for creating and managing a four-node topology with two hosts featuring traffic control between a north and south route')
 g = parser.add_mutually_exclusive_group()
 g.add_argument("-c", "--construct", action="store_true", help="construct or rebuild the four-node network topology")
 g.add_argument("-d", "--daemons", action="store_true", help="start up OSPF daemons with appropriate configurations in the routed network topology")
@@ -20,12 +20,14 @@ if args.construct:
 
     def add_network(name, subnet):
         try:
+            print(f"Checking for network {name} in existing environment...")
             network = client.networks.get(name)
             print(f"Network {name} already exists, removing...")
             for ctnr in network.containers:
+                print(f"Disconnecting {ctnr.name} from {name}")
                 network.disconnect(ctnr)
             network.remove()
-            print(f"Rebuilding network {name}")
+            print(f"Finished removing {name}, rebuilding...")
         except docker.errors.NotFound:
             print(f"Building network {name}...")
             
@@ -44,11 +46,12 @@ if args.construct:
     image, _ = client.images.build(path=".", tag="image")
     def add_container(name, subnet_addresses):
         try:
+            print(f"Checking for network {name} in existing environment...")
             container = client.containers.get(name)
             print(f"Container {name} already exists, removing...")
             container.stop()
             container.remove()
-            print(f"Reubilding container {name}...")
+            print(f"Finished removing {name}, rebuilding...")
         except docker.errors.NotFound:
             print(f"Building container {name}...")
 
@@ -75,7 +78,7 @@ if args.construct:
     add_container("ha", [("net12", "10.0.12.9")])
     add_container("hb", [("net34", "10.0.34.9")])
 
-    print("Topology construction finished")
+    print("All networks and nodes creatd, exiting")
 if args.daemons:
     pass 
 if args.routes:
@@ -85,16 +88,25 @@ if args.north:
 if args.south:
     pass
 if args.quit:
-    print("Beginning takedown of the topology...")
+    print("Beginning destruction of the topology...")
+    removed = False
     for network in client.networks:
+        removed = True
         name = network.name
+        print(f"Removing network {name}...")
         for ctnr in network.containers:
+            print(f"Disconnecting {cntr.name} from {name}...")
             network.disconnect(ctnr)
         network.remove()
         print(f"Network {name} removed")
     for container in client.containers:
+        removed = True
         name = container.name
+        print(f"Removing container {name}...")
         container.stop()
         container.remove()
         print(f"Container {name} removed")
-    print("Topology takedown finished")
+    if not removed:
+        print("Nothing to remove, exiting")
+    else:
+        print("Topology disconnected, exiting")
