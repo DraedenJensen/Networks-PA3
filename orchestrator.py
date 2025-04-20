@@ -24,8 +24,7 @@ def add_container(name, subnet_addresses):
         tty=True,
         cap_add=["ALL"],
         privileged=True,
-        detach=True,
-        network_mode="none"
+        detach=True
     )
 
     for tup in subnet_addresses:
