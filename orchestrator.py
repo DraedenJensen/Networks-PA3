@@ -21,21 +21,25 @@ add_network("net34", "10.0.34.0/24")
 image, _ = client.images.build(path=".", tag="image")
 
 def add_container(name, subnet_addresses):
-    container = client.containers.create(
-        image="image",
-        name=name,
-        stdin_open=True,
-        tty=True,
-        cap_add=["ALL"],
-        privileged=True,
-        detach=True
-    )
+    try:
+        client.containers.get(name)
+        print(f"Container {name} already exists.")
+    except docker.errors.NotFound:
+        container = client.containers.create(
+            image="image",
+            name=name,
+            stdin_open=True,
+            tty=True,
+            cap_add=["ALL"],
+            privileged=True,
+            detach=True
+        )
 
-    for tup in subnet_addresses:
-        client.networks.get(tup[0]).connect(container, ipv4_address=tup[1])
+        for tup in subnet_addresses:
+            client.networks.get(tup[0]).connect(container, ipv4_address=tup[1])
 
-    container.start()
-    print(f"Container {name} created and connected to subnets")
+        container.start()
+        print(f"Container {name} created and connected to subnets")
 
 add_container("r1", [("net12", "10.0.12.5"), ("net14", "10.0.14.5")])
 add_container("r2", [("net12", "10.0.12.2"), ("net23", "10.0.23.2")])
