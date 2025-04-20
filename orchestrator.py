@@ -142,7 +142,9 @@ if args.routes:
                                 "-c 'configure terminal' " 
                                 "-c 'router ospf' "
                                 f"-c 'network {net1} area 0.0.0.0' " 
-                                f"-c 'network {net2} area 0.0.0.0'"), shell=True)
+                                f"-c 'network {net2} area 0.0.0.0'"
+                                "-c 'exit' "
+                                "-c 'end"), shell=True)
                 print(f"Router {container.name} now advertising subnets {net1} and {net2}")
             else:
                 subprocess.run(f"docker exec -it {container.name} route add -net {net}", shell=True)
@@ -161,8 +163,7 @@ if args.routes:
                             "-c 'interface eth1' "
                             "-c 'ip ospf cost 10' " 
                             "-c 'exit' "
-                            "-c 'interface eth2' "
-                            "-c 'ip ospf cost 10'"), shell=True)
+                            "-c 'end' "), shell=True)
             print(f"Finished adding weights for {container.name}")
         for container in client.containers.list():
             if not (container.name == "ha" or container.name == "hb"):
@@ -174,13 +175,15 @@ if args.north:
     if len(client.containers.list()) == 0:
         print("Error: no containers connected, exiting")
     subprocess.run((f"docker exec -it r2 "
-                "vtysh " 
-                "-c 'configure terminal' " 
-                "-c 'interface eth0' "
-                "-c 'ip ospf cost 100' " 
-                "-c 'exit' "
-                "-c 'interface eth1' "
-                "-c 'ip ospf cost 10'"), shell=True)
+                    "vtysh " 
+                    "-c 'configure terminal' " 
+                    "-c 'interface eth0' "
+                    "-c 'ip ospf cost 100' " 
+                    "-c 'exit' "
+                    "-c 'interface eth1' "
+                    "-c 'ip ospf cost 10' 
+                    "-c 'exit' "
+                    "-c 'end'"), shell=True)
     subprocess.run((f"docker exec -it r4 "
                     "vtysh " 
                     "-c 'configure terminal' " 
@@ -188,7 +191,9 @@ if args.north:
                     "-c 'ip ospf cost 100' " 
                     "-c 'exit' "
                     "-c 'interface eth1' "
-                    "-c 'ip ospf cost 100'"), shell=True)
+                    "-c 'ip ospf cost 100'"
+                    "-c 'exit' "
+                    "-c 'end'"), shell=True)
     print("OSPF costs updated, exiting")
 if args.south:
     print("Directing traffic to south route (R4)...")
@@ -201,7 +206,9 @@ if args.south:
                     "-c 'ip ospf cost 10' " 
                     "-c 'exit' "
                     "-c 'interface eth1' "
-                    "-c 'ip ospf cost 10'"), shell=True)
+                    "-c 'ip ospf cost 10' " 
+                    "-c 'exit' "
+                    "-c 'end'"), shell=True)
     subprocess.run((f"docker exec -it r2 "
                     "vtysh " 
                     "-c 'configure terminal' " 
@@ -209,7 +216,9 @@ if args.south:
                     "-c 'ip ospf cost 100' " 
                     "-c 'exit' "
                     "-c 'interface eth2' "
-                    "-c 'ip ospf cost 100'"), shell=True)
+                    "-c 'ip ospf cost 100'" 
+                    "-c 'exit' "
+                    "-c 'end'"), shell=True)
     print("OSPF costs updated, exiting")
 if args.quit:
     print("Beginning destruction of the topology...")
