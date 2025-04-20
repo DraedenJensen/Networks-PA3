@@ -1,9 +1,10 @@
 import docker
 import argparse
+import subprocess
 
 parser = argparse.ArgumentParser(prog = 'OSPF orchestrator', 
                                  description='An application for creating and managing a four-node topology with two hosts featuring traffic control between a north and south route')
-g = parser.add_mutually_exclusive_group()
+g = parser.add_mutually_exclusive_group(required=True)
 g.add_argument("-c", "--construct", action="store_true", help="construct or rebuild the four-node network topology")
 g.add_argument("-d", "--daemons", action="store_true", help="start up OSPF daemons with appropriate configurations in the routed network topology")
 g.add_argument("-r", "--routes", action="store_true", help="install routes connecting the hosts and endpoints in the routed network topology")
@@ -80,7 +81,23 @@ if args.construct:
 
     print("All networks and nodes created, exiting")
 if args.daemons:
-    pass 
+    print("Beginning OSPF daemon setup")
+    if len(client.containers.list()) == 0:
+        print("Error: no containers connected, exiting")
+    else:
+        for container in client.containers.list():
+            exec = f"exec -it {container.name}
+            subprocess.run(f"{exec} hostname")
+        #     subprocess.run(f"{exec} apt -y install curl")
+        #     subprocess.run(f"{exec} apt -y install gnupg")
+        #     subprocess.run(f"{exec} curl -s https://deb.frrouting.org/frr/keys.gpg | \\")
+        #     subprocess.run(f"tee /usr/share/keyrings/frrouting.gpg > /dev/null")
+        #     subprocess.run(f"{exec} apt install lsb-release")
+        #     subprocess.run(f"{exec} FRRVER=\"frr-stable\"")
+        #     subprocess.run(f"{exec} echo deb ’[signed-by=/usr/share/keyrings/frrouting.gpg]’ https://deb.frrouting.org/frr \\")
+        #     subprocess.run(f"$(lsb_release -s -c) $FRRVER | tee -a /etc/apt/sources.list.d/frr.list")
+        #     subprocess.run(f"apt update && apt -y install frr frr-pythontools")
+
 if args.routes:
     pass 
 if args.north:
