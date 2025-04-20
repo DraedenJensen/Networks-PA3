@@ -93,7 +93,7 @@ if args.quit:
     for net in client.networks.list():
         removed = True
         network= client.networks.get(net.name)
-        print(f"Removing network {name}...")
+        print(f"Removing network {net.name}...")
         for ctnr in network.containers:
             print(f"Disconnecting {cntr.name} from {name}...")
             network.disconnect(ctnr)
