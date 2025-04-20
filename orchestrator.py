@@ -9,6 +9,7 @@ parser.add_argument("-r", "--routes", action="store_true", help="Install routes 
 parser.add_argument("-n", "--north", action="store_true", help="Direct network traffic to the north path (via router R2)")
 parser.add_argument("-s", "--south", action="store_true", help="Direct network traffic to the south path (via router R4)")
 parser.add_argument("-q", "--quit", action="store_true", help="Disconnect the network topology")
+args = parser.parse_args()
 
 client = docker.from_env()
 
